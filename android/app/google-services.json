@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "324239524608",
+    "project_id": "chat-demo-ec549",
+    "storage_bucket": "chat-demo-ec549.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:324239524608:android:a9a236db40b305280029e5",
+        "android_client_info": {
+          "package_name": "com.zerob.chat_demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "324239524608-t6dllrl640vns1a9klort81hkvpl9d00.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnUSSJRKItFNctpXOCj8TYnx1mzY6P9Rc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "324239524608-t6dllrl640vns1a9klort81hkvpl9d00.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
