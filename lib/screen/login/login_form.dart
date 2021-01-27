@@ -1,3 +1,5 @@
+import 'package:chat_demo/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:chat_demo/blocs/authentication_bloc/authentication_event.dart';
 import 'package:chat_demo/blocs/login_bloc/login_bloc.dart';
 import 'package:chat_demo/blocs/login_bloc/login_event.dart';
 import 'package:chat_demo/blocs/login_bloc/login_state.dart';
@@ -22,6 +24,13 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  bool get isPopulated =>
+      _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+
+  bool isButtonEnable(LoginState state) {
+    return state.isFormValid && isPopulated && !state.isSubmitting;
+  }
+
   LoginBloc _loginBloc;
 
   @override
@@ -43,8 +52,22 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        print(state.isSubmitting);
-        if (state.isFailure) {}
+        if (state.isFailure) {
+          Scaffold.of(context)
+            ..removeCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('Login Failure'),
+                    Icon(Icons.error),
+                  ],
+                ),
+                backgroundColor: Color(0xffffae88),
+              ),
+            );
+        }
 
         if (state.isSubmitting) {
           Scaffold.of(context)
@@ -55,14 +78,21 @@ class _LoginFormState extends State<LoginForm> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text('Logging In...'),
-                    CircularProgressIndicator(),
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
                   ],
                 ),
+                backgroundColor: Color(0xffffae88),
               ),
             );
         }
 
-        if (state.isSuccess) {}
+        if (state.isSuccess) {
+          BlocProvider.of<AuthenticationBloc>(context).add(
+            AuthenticationLoggedIn(),
+          );
+        }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
@@ -103,7 +133,9 @@ class _LoginFormState extends State<LoginForm> {
                   width: 150.0,
                   height: 45.0,
                   onPressed: () {
-                    _onFormSubmitted();
+                    if (isButtonEnable(state)) {
+                      _onFormSubmitted();
+                    }
                   },
                   text: Text(
                     'LogIn',
@@ -122,7 +154,9 @@ class _LoginFormState extends State<LoginForm> {
                   height: 45.0,
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(builder: (_) {
-                      return RegisterScreen();
+                      return RegisterScreen(
+                        userRepository: widget._userRepository,
+                      );
                     }));
                   },
                   text: Text(
@@ -143,11 +177,11 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _onEmailChange() {
-    _loginBloc.add(LoginEmailChange(email: _emailController.text));
+    _loginBloc.add(LoginEmailChanged(email: _emailController.text));
   }
 
   void _onPasswordChange() {
-    _loginBloc.add(LoginPasswordChange(password: _passwordController.text));
+    _loginBloc.add(LoginPasswordChanged(password: _passwordController.text));
   }
 
   void _onFormSubmitted() {

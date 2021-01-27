@@ -13,13 +13,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
-    if (event is LoginEmailChange) {
-      print(event.email);
+    if (event is LoginEmailChanged) {
       yield* _mapLoginEmailChangeToState(event.email);
-    } else if (event is LoginPasswordChange) {
+    } else if (event is LoginPasswordChanged) {
       yield* _mapLoginPasswordChangeToState(event.password);
     } else if (event is LoginWithCredentialsPressed) {
-      yield* _mapLoginWiuthCredentialsPressedToState(email: event.email, password: event.password);
+      yield* _mapLoginWithCredentialsPressedToState(email: event.email, password: event.password);
     }
   }
 
@@ -35,7 +34,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     );
   }
 
-  Stream<LoginState> _mapLoginWiuthCredentialsPressedToState({
+  Stream<LoginState> _mapLoginWithCredentialsPressedToState({
     String email, String password
   }) async* {
     yield LoginState.loading();

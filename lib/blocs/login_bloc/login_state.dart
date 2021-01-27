@@ -40,8 +40,8 @@ class LoginState {
       isEmailValid: true,
       isPasswordValid: true,
       isSubmitting: false,
-      isSuccess: true,
-      isFailure: false,
+      isSuccess: false,
+      isFailure: true,
     );
   }
 

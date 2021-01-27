@@ -43,11 +43,11 @@ class MyApp extends StatelessWidget {
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
           if (state is AuthenticationFailure) {
-            return LoginScreen();
+            return LoginScreen(userRepository: _userRepository);
           }
 
           if (state is AuthenticationSuccess) {
-            return HomeScreen();
+            return HomeScreen(user: state.firebaseUser);
           }
 
           return Scaffold(
