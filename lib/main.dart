@@ -1,8 +1,7 @@
 import 'package:chat_demo/blocs/authentication_bloc/authentication_bloc.dart';
-import 'package:chat_demo/blocs/authentication_bloc/authentication_event.dart';
-import 'package:chat_demo/blocs/authentication_bloc/authentication_state.dart';
+import 'package:chat_demo/blocs/home_bloc/home_bloc.dart';
 import 'package:chat_demo/blocs/simple_bloc_observer.dart';
-import 'package:chat_demo/repositories/user_repository.dart';
+import 'package:chat_demo/locator.dart';
 import 'package:chat_demo/screen/home_screen.dart';
 import 'package:chat_demo/screen/login/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,43 +10,39 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
 
   Bloc.observer = SimpleBlocObserver();
-  final UserRepository userRepository = UserRepository();
+  setupLocator();
+
+  await Firebase.initializeApp();
   runApp(
     BlocProvider(
-      create: (context) => AuthenticationBloc(
-        userRepository: userRepository,
-      )..add(AuthenticationStarted()),
-      child: MyApp(
-        userRepository: userRepository,
-      ),
+      create: (context) => AuthenticationBloc()..add(AuthenticationStarted()),
+      child: MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  final UserRepository _userRepository;
-
-  MyApp({UserRepository userRepository}) : _userRepository = userRepository;
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Chat Demo',
       theme: ThemeData(
-        primaryColor: Color(0xff6a515e),
-        cursorColor: Color(0xff6a515e),
+        primaryColor: Color(0xfffae7e9),
+        accentColor: Color(0xfff2cbd0),
       ),
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
           if (state is AuthenticationFailure) {
-            return LoginScreen(userRepository: _userRepository);
+            return LoginScreen();
           }
 
           if (state is AuthenticationSuccess) {
-            return HomeScreen(user: state.firebaseUser);
+            return BlocProvider(
+              create: (context) => HomeBloc(),
+              child: HomeScreen(member: state.member),
+            );
           }
 
           return Scaffold(

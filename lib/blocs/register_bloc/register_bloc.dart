@@ -1,15 +1,16 @@
-import 'package:chat_demo/blocs/register_bloc/register_event.dart';
-import 'package:chat_demo/blocs/register_bloc/register_state.dart';
-import 'package:chat_demo/repositories/user_repository.dart';
+import 'package:chat_demo/locator.dart';
+import 'package:chat_demo/repositories/service/auth_service.dart';
 import 'package:chat_demo/utils/validator.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
-  final UserRepository _userRepository;
+part 'register_event.dart';
+part 'register_state.dart';
 
-  RegisterBloc({UserRepository userRepository})
-      : _userRepository = userRepository,
-        super(RegisterState.initial());
+class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
+  final AuthService _authService = locator<AuthService>();
+
+  RegisterBloc() : super(RegisterState.initial());
 
   @override
   Stream<RegisterState> mapEventToState(RegisterEvent event) async* {
@@ -39,7 +40,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   }) async* {
     yield RegisterState.loading();
     try {
-      await _userRepository.signUp(email, password);
+      await _authService.signUp(email, password);
       yield RegisterState.success();
     } catch(_) {
       yield RegisterState.failure();

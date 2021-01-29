@@ -1,16 +1,10 @@
 import 'package:chat_demo/blocs/login_bloc/login_bloc.dart';
-import 'package:chat_demo/repositories/user_repository.dart';
 import 'package:chat_demo/screen/login/login_form.dart';
 import 'package:chat_demo/widget/curved_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginScreen extends StatelessWidget {
-  final UserRepository _userRepository;
-
-  const LoginScreen({Key key, UserRepository userRepository})
-      : _userRepository = userRepository,
-        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +15,7 @@ class LoginScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
       ),
       body: BlocProvider<LoginBloc>(
-        create: (context) => LoginBloc(userRepository: _userRepository),
+        create: (context) => LoginBloc(),
         child: Container(
           height: double.infinity,
           decoration: BoxDecoration(
@@ -57,7 +51,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 230.0),
-                  child: LoginForm(userRepository: _userRepository),
+                  child: LoginForm(),
                 )
               ],
             ),

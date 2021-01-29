@@ -1,15 +1,16 @@
-import 'package:chat_demo/blocs/authentication_bloc/authentication_event.dart';
-import 'package:chat_demo/blocs/authentication_bloc/authentication_state.dart';
-import 'package:chat_demo/repositories/user_repository.dart';
+import 'package:chat_demo/locator.dart';
+import 'package:chat_demo/repositories/model/member.dart';
+import 'package:chat_demo/repositories/service/auth_service.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AuthenticationBloc
-    extends Bloc<AuthenticationEvent, AuthenticationState> {
-  final UserRepository _userRepository;
+part 'authentication_event.dart';
+part 'authentication_state.dart';
 
-  AuthenticationBloc({UserRepository userRepository})
-      : _userRepository = userRepository,
-        super(AuthenticationInitial());
+class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
+  final AuthService _authService = locator<AuthService>();
+
+  AuthenticationBloc() : super(AuthenticationInitial());
 
   @override
   Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async*{
@@ -25,19 +26,19 @@ class AuthenticationBloc
   /// AuthenticationLoggedOut
   Stream<AuthenticationState> _mapAuthenticationLoggedOutToState() async* {
     yield AuthenticationFailure();
-    _userRepository.signOut();
+    _authService.signOut();
   }
 
   /// AuthenticationLoggedIn
   Stream<AuthenticationState> _mapAuthenticationLoggedInToState() async* {
-    yield AuthenticationSuccess(await _userRepository.getUser());
+    yield AuthenticationSuccess(await _authService.getUser());
   }
 
   /// AuthenticationStarted
   Stream<AuthenticationState> _mapAuthenticationStartedToState() async* {
-    final isSingedIn = await _userRepository.isSignedIn();
+    final isSingedIn = await _authService.isSignedIn();
     if(isSingedIn){
-      final firebaseUser = await _userRepository.getUser();
+      final firebaseUser = await _authService.getUser();
       yield AuthenticationSuccess(firebaseUser);
     } else {
       yield AuthenticationFailure();

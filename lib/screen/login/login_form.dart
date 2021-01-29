@@ -1,20 +1,12 @@
 import 'package:chat_demo/blocs/authentication_bloc/authentication_bloc.dart';
-import 'package:chat_demo/blocs/authentication_bloc/authentication_event.dart';
 import 'package:chat_demo/blocs/login_bloc/login_bloc.dart';
-import 'package:chat_demo/blocs/login_bloc/login_event.dart';
-import 'package:chat_demo/blocs/login_bloc/login_state.dart';
-import 'package:chat_demo/repositories/user_repository.dart';
 import 'package:chat_demo/screen/register/register_screen.dart';
 import 'package:chat_demo/widget/gradient_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginForm extends StatefulWidget {
-  final UserRepository _userRepository;
-
-  const LoginForm({Key key, UserRepository userRepository})
-      : _userRepository = userRepository,
-        super(key: key);
+  const LoginForm({Key key}) : super(key: key);
 
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -154,9 +146,7 @@ class _LoginFormState extends State<LoginForm> {
                   height: 45.0,
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(builder: (_) {
-                      return RegisterScreen(
-                        userRepository: widget._userRepository,
-                      );
+                      return RegisterScreen();
                     }));
                   },
                   text: Text(

@@ -1,8 +1,5 @@
 import 'package:chat_demo/blocs/authentication_bloc/authentication_bloc.dart';
-import 'package:chat_demo/blocs/authentication_bloc/authentication_event.dart';
 import 'package:chat_demo/blocs/register_bloc/register_bloc.dart';
-import 'package:chat_demo/blocs/register_bloc/register_event.dart';
-import 'package:chat_demo/blocs/register_bloc/register_state.dart';
 import 'package:chat_demo/widget/gradient_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

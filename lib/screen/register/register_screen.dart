@@ -1,16 +1,10 @@
 import 'package:chat_demo/blocs/register_bloc/register_bloc.dart';
-import 'package:chat_demo/repositories/user_repository.dart';
 import 'package:chat_demo/screen/register/register_form.dart';
 import 'package:chat_demo/widget/curved_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RegisterScreen extends StatelessWidget {
-  final UserRepository _userRepository;
-
-  const RegisterScreen({Key key, UserRepository userRepository})
-      : _userRepository = userRepository,
-        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +18,7 @@ class RegisterScreen extends StatelessWidget {
         ),
       ),
       body: BlocProvider<RegisterBloc>(
-        create: (context) => RegisterBloc(userRepository: _userRepository),
+        create: (context) => RegisterBloc(),
         child: Container(
           height: double.infinity,
           decoration: BoxDecoration(

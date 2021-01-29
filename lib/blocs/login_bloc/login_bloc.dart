@@ -1,15 +1,16 @@
-import 'package:chat_demo/blocs/login_bloc/login_event.dart';
-import 'package:chat_demo/blocs/login_bloc/login_state.dart';
-import 'package:chat_demo/repositories/user_repository.dart';
+import 'package:chat_demo/locator.dart';
+import 'package:chat_demo/repositories/service/auth_service.dart';
 import 'package:chat_demo/utils/validator.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final UserRepository _userRepository;
+part 'login_event.dart';
+part 'login_state.dart';
 
-  LoginBloc({UserRepository userRepository})
-      : _userRepository = userRepository,
-        super(LoginState.initial());
+class LoginBloc extends Bloc<LoginEvent, LoginState> {
+  final AuthService _authService = locator<AuthService>();
+
+  LoginBloc() : super(LoginState.initial());
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
@@ -18,7 +19,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     } else if (event is LoginPasswordChanged) {
       yield* _mapLoginPasswordChangeToState(event.password);
     } else if (event is LoginWithCredentialsPressed) {
-      yield* _mapLoginWithCredentialsPressedToState(email: event.email, password: event.password);
+      yield* _mapLoginWithCredentialsPressedToState(
+          email: event.email, password: event.password);
     }
   }
 
@@ -34,14 +36,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     );
   }
 
-  Stream<LoginState> _mapLoginWithCredentialsPressedToState({
-    String email, String password
-  }) async* {
+  Stream<LoginState> _mapLoginWithCredentialsPressedToState(
+      {String email, String password}) async* {
     yield LoginState.loading();
     try {
-      await _userRepository.signInWithCredentials(email, password);
+      await _authService.signInWithCredentials(email, password);
       yield LoginState.success();
-    } catch(_) {
+    } catch (_) {
       yield LoginState.failure();
     }
   }
