@@ -1,11 +1,11 @@
 import 'package:chat_demo/locator.dart';
 import 'package:chat_demo/repositories/model/member.dart';
-import 'package:chat_demo/repositories/service/user_service.dart';
+import 'package:chat_demo/repositories/service/firebase_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth;
-  final MemberService _memberService = locator<MemberService>();
+  final FireStoreService _memberService = locator<FireStoreService>();
 
   AuthService({FirebaseAuth firebaseAuth})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;

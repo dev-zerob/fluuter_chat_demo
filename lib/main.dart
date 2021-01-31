@@ -31,6 +31,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Color(0xfffae7e9),
         accentColor: Color(0xfff2cbd0),
+        appBarTheme: AppBarTheme(
+          elevation: 0.0,
+          color: Colors.transparent,
+        )
       ),
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {

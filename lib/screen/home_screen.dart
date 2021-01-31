@@ -1,5 +1,8 @@
+import 'package:chat_demo/blocs/chat_list_bloc/chat_list_bloc.dart';
 import 'package:chat_demo/blocs/home_bloc/home_bloc.dart';
 import 'package:chat_demo/repositories/model/member.dart';
+import 'package:chat_demo/screen/chat_list/chat_list_screen.dart';
+import 'package:chat_demo/screen/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,6 +18,7 @@ class HomeScreen extends StatelessWidget {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         return Scaffold(
+          extendBody: true,
           bottomNavigationBar: ClipRRect(
             borderRadius: BorderRadius.only(
               topLeft: const Radius.circular(45.0),
@@ -56,21 +60,21 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           body: PageView(
+            physics: NeverScrollableScrollPhysics(),
             controller: _pageController,
             onPageChanged: (idx) {
-              if (idx == 0){
+              if (idx == 0) {
                 context.read<HomeBloc>().add(ChangeProfile());
-              } else if (idx == 1){
+              } else if (idx == 1) {
                 context.read<HomeBloc>().add(ChangeChatList());
               }
               _pageController.jumpToPage(idx);
             },
             children: <Widget>[
-              Container(
-                child: Text('Profile'),
-              ),
-              Container(
-                child: Text('ChatList'),
+              ProfileScreen(member: member),
+              BlocProvider(
+                create: (context) => ChatListBloc(member: member)..add(ChatListStart()),
+                child: ChatListScreen(member: member),
               ),
             ],
           ),
